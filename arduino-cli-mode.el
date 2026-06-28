@@ -337,10 +337,12 @@ If BOARD has multiple matching_boards, the first one is used."
          (fqbn  (if-let (fqbn (arduino-cli--board-fqbn board))
                     fqbn
                   (error "ERROR: No fqbn specified")))
-         (port  (if-let (port (arduino-cli--board-address board))
-                    port
-                  (error "ERROR: No port specified")))
-         (cmd   (concat "compile --fqbn " fqbn " --port " port " --upload")))
+         (port  (arduino-cli--board-address board))
+         (cmd   (concat "compile --fqbn "  fqbn
+                        (if port
+                            (concat " --port " port)
+                          "")
+                        " --upload")))
     (arduino-cli--compile 'compile cmd)))
 
 (defun arduino-cli-upload ()
@@ -354,10 +356,11 @@ If BOARD has multiple matching_boards, the first one is used."
          (fqbn  (if-let (fqbn (arduino-cli--board-fqbn board))
                     fqbn
                   (error "ERROR: No fqbn specified")))
-         (port  (if-let (port (arduino-cli--board-address board))
-                    port
-                  (error "ERROR: No port specified")))
-         (cmd (concat "upload --fqbn " fqbn " --port " port)))
+         (port  (arduino-cli--board-address board))
+         (cmd (concat "upload --fqbn " fqbn
+                      (if port
+                          (concat " --port " port)
+                        ""))))
     (arduino-cli--compile 'upload cmd)))
 
 (defun arduino-cli-board-list ()
